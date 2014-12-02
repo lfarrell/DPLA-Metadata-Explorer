@@ -12,7 +12,7 @@ angular.module('metadataViewerApp').config(function($routeProvider) {
             templateUrl: 'partials/trove.html',
             controller: 'troveController'
         })
-        .when('/digitalnz', {
+        .when('/digital_nz', {
             templateUrl: 'partials/digital_nz.html',
             controller: 'digitalNzController'
         })
