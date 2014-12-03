@@ -16,6 +16,10 @@ angular.module('metadataViewerApp').config(function($routeProvider) {
             templateUrl: 'partials/digital_nz.html',
             controller: 'digitalNzController'
         })
+        .when('/europeana', {
+            templateUrl: 'partials/europeana.html',
+            controller: 'europeanaController'
+        })
         .otherwise({
             redirectTo: '/'
         });
