@@ -1,1 +1,1 @@
-Visual interface to explore the metadata in the Digital Public Library of America
+Visual interface to explore metadata in the Digital Public Library of America, Trove, Digital New Zealand and Europeana.
