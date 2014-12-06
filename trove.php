@@ -1,7 +1,7 @@
 <?php
 include 'functions.php';
+include 'keys.php';
 
-$_GET['q'] = 'stone';
 $q = clean($_GET['q']);
 $path = "http://api.trove.nla.gov.au/result?key=$trove_key&zone=all&q=$q&facet=format";
 $records = get_records($path);

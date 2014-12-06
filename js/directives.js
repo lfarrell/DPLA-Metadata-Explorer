@@ -30,18 +30,18 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                 .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
             node.append("title")
-                .text(function(d) { return d.language + ": " + format(d.value); });
+                .text(function(d) { return d.term + ": " + format(d.count); });
 
             node.append("circle")
                 .attr("r", function(d) { return d.r; })
-                .style("fill", function(d) { return color(d.value); })
+                .style("fill", function(d) { return color(d.count); })
                 .on("mouseover", function(d) {
                     div.transition()
                         .duration(200)
                         .style("opacity", .9);
 
-                    div .html(format(d.value) + " books/journals are in "  + d.language
-                            + "<br/>Click to view books in this language")
+                    div .html(format(d.count) + " items for "  + d.term
+                            + "<br/>Click to view items")
                         .style("top", (d3.event.pageY-28)+"px")
                         .style("left", (d3.event.pageX-28)+"px");
                 })
@@ -51,14 +51,14 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                         .style("opacity", 0);
                 })
                 .on("click", function(d) {
-                    window.open("http://dp.la/bookshelf?language%5B%5D=" + d.language);
+                    window.open("http://dp.la/bookshelf?language%5B%5D=" + d.term);
                 });
 
             node.append("text")
                 .attr("dy", ".3em")
                 .style("text-anchor", "middle")
                 .style("pointer-events", "none")
-                .text(function(d) { return d.language.substring(0, d.r / 3); });
+                .text(function(d) { return d.term.substring(0, d.r / 3); });
         });
 
         function classes(root) {

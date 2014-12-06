@@ -12,4 +12,8 @@ angular.module('metadataViewerApp').service('LoadService', function() {
             $scope.$apply();
         }
     };
+
+    this.queryFormat = function(terms) {
+        return terms.replace(/\s+/g, '+');
+    }
 });
