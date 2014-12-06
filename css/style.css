@@ -7,3 +7,16 @@ body {
 h2 {
     margin-top: 75px;
 }
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width:  auto;
+    height: auto;
+    padding: 5px;
+    font: 12px Ralway,sans-serif;
+    background: black;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
