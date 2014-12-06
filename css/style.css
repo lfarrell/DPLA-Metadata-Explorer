@@ -4,8 +4,13 @@ body {
     font-family: 'Raleway', sans-serif;;
 }
 
-h2 {
+#search_form {
     margin-top: 75px;
+}
+
+#search_form input {
+    font-size: 0.7em;
+    height: 50px;
 }
 
 div.tooltip {
@@ -14,7 +19,7 @@ div.tooltip {
     width:  auto;
     height: auto;
     padding: 5px;
-    font: 12px Ralway,sans-serif;
+    font: 12px 'Raleway',sans-serif;
     background: black;
     border: 0px;
     border-radius: 8px;

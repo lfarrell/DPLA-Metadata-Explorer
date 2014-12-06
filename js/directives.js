@@ -1,8 +1,9 @@
+// port of http://bl.ocks.org/mbostock/4063269 to angular with some additions
 angular.module('metadataViewerApp').directive('bubbleChart', function() {
     function link(scope, element, attrs) {
         var diameter = document.body.clientWidth,
             format = d3.format(",d"),
-            color = d3.scale.category10c();
+            color = d3.scale.category20c();
 
         var bubble = d3.layout.pack()
             .sort(null)

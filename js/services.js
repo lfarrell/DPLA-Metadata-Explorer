@@ -4,9 +4,13 @@ angular.module('metadataViewerApp').service('LoadService', function() {
             load(graph);
         });
 
-        function load(graph) {
+        function load(data) {
+            var nested = d3.nest()
+                .key(function(d) { return d.type; })
+                .map(data);
+
             // put the data into angular's scope
-            $scope.data = graph;
+            $scope.data = nested;
             $scope.loading = false;
             $scope.loaded = true;
             $scope.$apply();

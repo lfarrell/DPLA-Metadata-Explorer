@@ -3,7 +3,7 @@ include 'functions.php';
 
 $_GET['q'] = 'stone';
 $q = clean($_GET['q']);
-$path = "http://api.dp.la/v2/items?q=" . $q . "&facets=sourceResource.type,provider.name,sourceResource.language.name,sourceResource.spatial.country,sourceResource.spatial.state,sourceResource.subject.name&page_size=0&facet_size=2&api_key=$dpla_key";
+$path = "http://api.dp.la/v2/items?q=" . $q . "&facets=sourceResource.type,provider.name,sourceResource.language.name,sourceResource.spatial.country,sourceResource.spatial.state,sourceResource.subject.name&page_size=0&facet_size=20&api_key=$dpla_key";
 $records = get_records($path);
 
 $data = json_decode($records, true);
