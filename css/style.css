@@ -9,8 +9,9 @@ body {
 }
 
 #search_form input {
-    font-size: 0.7em;
+    font-size: 1em;
     height: 50px;
+    width: 75%;
 }
 
 div.tooltip {
