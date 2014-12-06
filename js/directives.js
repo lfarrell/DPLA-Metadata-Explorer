@@ -19,7 +19,7 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
             .attr("height", document.body.clientHeight)
             .attr("class", "bubble");
 
-        scope.$watch('data', function(d) {
+        scope.$watch('data', function(data) {
             if(!data) { return; }
 
             var node = svg.selectAll(".node")

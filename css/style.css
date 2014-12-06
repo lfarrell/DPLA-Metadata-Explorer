@@ -4,8 +4,9 @@ body {
     font-family: 'Raleway', sans-serif;;
 }
 
-#search_form {
+h2 {
     margin-top: 75px;
+    text-align: center;
 }
 
 #search_form input {

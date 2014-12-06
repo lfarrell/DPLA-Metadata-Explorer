@@ -1,2 +1,11 @@
-<h2>{{ header }}</h2>
-<img src="API-light.png" alt="Powered by Trove">
+<div class="row">
+    <div class="col-md-offset-3 col-md-6 col-md-offset-3">
+        <h2>{{ header }}</h2>
+        <form id="search_form"  class="form-inline" role="form" ng-submit="apiSearch()">
+            <input ng-model="search" type="text" class="form-control" placeholder="Search Trove!" />
+            <button class="btn btn-lg btn-info" type="submit" value="Search">Search</button>
+        </form>
+    </div>
+    <div class="col-md-12 bubbleChart" ng-show="loaded"></div>
+    <div class="col-md-12" ng-show="loaded"><img src="imgs/API-light.png" alt="Powered by Trove"></div>
+</div>
