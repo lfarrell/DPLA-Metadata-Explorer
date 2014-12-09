@@ -7,6 +7,7 @@ body {
 h2 {
     margin-top: 75px;
     text-align: center;
+    margin-left: -15%;
 }
 
 #search_form input {
@@ -26,4 +27,8 @@ div.tooltip {
     border: 0px;
     border-radius: 8px;
     pointer-events: none;
+}
+
+text {
+    fill: white;
 }

@@ -1,14 +1,11 @@
 // port of http://bl.ocks.org/mbostock/4063269 to angular with some additions
 angular.module('metadataViewerApp').directive('bubbleChart', function() {
     function link(scope, element, attrs) {
+        d3.selectAll("svg").remove();
+
         var diameter = document.body.clientWidth,
             format = d3.format(",d"),
             color = d3.scale.category20c();
-
-        var bubble = d3.layout.pack()
-            .sort(null)
-            .size([diameter, diameter])
-            .padding(1.5);
 
         var div = d3.select("body").append("div")
             .attr("class", "tooltip")
@@ -16,31 +13,53 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
 
         var svg = d3.select(element[0]).append("svg")
             .attr("width", diameter)
-            .attr("height", document.body.clientHeight)
+            .attr("height", diameter)
             .attr("class", "bubble");
 
         scope.$watch('data', function(data) {
             if(!data) { return; }
 
+            /**
+             * Format for bubble chart
+             * @type {{name: string, children: Array}}
+             */
+            var datas = {name: "root", "children": [] };
+            var keys = [];
+
+            data.forEach(function(d) {
+                if(_.contains(keys, d.type) === false) {
+                    datas.children.push({ "name": d.type, "children": []});
+                    keys.push(d.type);
+                }
+
+                var i = _.indexOf(keys, d.type);
+                datas.children[i].children.push(d);
+            });
+
+            var bubble = d3.layout.pack()
+                .sort(null)
+                .size([diameter, diameter])
+                .padding(1.5);
+
             var node = svg.selectAll(".node")
-                .data(bubble.nodes(classes(data))
+                .data(bubble.nodes(classes(datas))
                 .filter(function(d) { return !d.children; }))
                 .enter().append("g")
                 .attr("class", "node")
                 .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
             node.append("title")
-                .text(function(d) { return d.term + ": " + format(d.count); });
+                .text(function(d) { return d.term + ": " + format(d.value); });
 
             node.append("circle")
                 .attr("r", function(d) { return d.r; })
-                .style("fill", function(d) { return color(d.count); })
+                .style("fill", function(d) { return color(d.type); })
                 .on("mouseover", function(d) {
                     div.transition()
                         .duration(200)
                         .style("opacity", .9);
 
-                    div .html(format(d.count) + " items for "  + d.term
+                    div .html(format(d.value) + " items for "  + d.term
                             + "<br/>Click to view items")
                         .style("top", (d3.event.pageY-28)+"px")
                         .style("left", (d3.event.pageX-28)+"px");
@@ -66,7 +85,7 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
 
             function recurse(name, node) {
                 if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
-                else classes.push({root: root, language: node.lang, value: node.count});
+                else classes.push({root: root, term: node.term, value: node.count, type: node.type});
             }
 
             recurse(null, root);

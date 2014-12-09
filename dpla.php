@@ -2,15 +2,12 @@
 include 'functions.php';
 include 'keys.php';
 
-
 $q = clean($_GET['q']);
-$path = "http://api.dp.la/v2/items?q=" . $q . "&facets=sourceResource.type,provider.name,sourceResource.language.name,sourceResource.spatial.country,sourceResource.spatial.state,sourceResource.subject.name&page_size=0&facet_size=20&api_key=$dpla_key";
+$path = "http://api.dp.la/v2/items?q=" . $q . "&facets=sourceResource.type,provider.name,sourceResource.language.name,sourceResource.spatial.country,sourceResource.spatial.state,sourceResource.subject.name&page_size=0&facet_size=5&api_key=$dpla_key";
 $records = get_records($path);
-
 $data = json_decode($records, true);
 $values = array();
 
-$count = $data['count'];
 $formats = $data['facets']['sourceResource.type']['terms'];
 $providers = $data['facets']['provider.name']['terms'];
 $languages = $data['facets']['sourceResource.language.name']['terms'];
