@@ -5,11 +5,16 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
 
         var diameter = document.body.clientWidth,
             format = d3.format(",d"),
-            color = d3.scale.category20c();
+            color = d3.scale.category10();
 
         var div = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
+
+        var force = d3.layout.force()
+            .charge(-120)
+            .friction(0.9)
+            .size([diameter, diameter]);
 
         var svg = d3.select(element[0]).append("svg")
             .attr("width", diameter)
@@ -36,6 +41,34 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                 datas.children[i].children.push(d);
             });
 
+            var legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("x", 10)
+                .attr("y", 75)
+                .attr("height", "auto")
+                .attr("width", 295);
+
+            legend.selectAll('g').data(keys)
+                .enter()
+                .append('g')
+                .each(function(d, i) {
+                    var g = d3.select(this);
+                    g.append("rect")
+                        .attr("x", 15)
+                        .attr("y", i*25 + 5)
+                        .attr("width", 10)
+                        .attr("height", 10)
+                        .style("fill", color(d));
+
+                    g.append("text")
+                        .attr("x", 35)
+                        .attr("y", i * 25 + 15)
+                        .attr("height",30)
+                        .attr("width",200)
+                        .style("fill", "white")
+                        .text(d);
+                });
+
             var bubble = d3.layout.pack()
                 .sort(null)
                 .size([diameter, diameter])
@@ -48,6 +81,9 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                 .attr("class", "node")
                 .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
+            force.nodes(node)
+                 .start();
+
             node.append("title")
                 .text(function(d) { return d.term + ": " + format(d.value); });
 
@@ -59,7 +95,7 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                         .duration(200)
                         .style("opacity", .9);
 
-                    div .html(format(d.value) + " items for "  + d.term
+                    div.html(format(d.value) + " items for "  + d.term
                             + "<br/>Click to view items")
                         .style("top", (d3.event.pageY-28)+"px")
                         .style("left", (d3.event.pageX-28)+"px");
@@ -78,6 +114,11 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                 .style("text-anchor", "middle")
                 .style("pointer-events", "none")
                 .text(function(d) { return d.term.substring(0, d.r / 3); });
+
+            force.on("tick", function() {
+                node.attr("cx", function(d) { return d.x; })
+                    .attr("cy", function(d) { return d.y; });
+            });
         });
 
         function classes(root) {
