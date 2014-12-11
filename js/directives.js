@@ -55,7 +55,7 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                     var g = d3.select(this);
                     g.append("rect")
                         .attr("x", 15)
-                        .attr("y", i*25 + 5)
+                        .attr("y", i * 25 + 5)
                         .attr("width", 10)
                         .attr("height", 10)
                         .style("fill", color(d));
@@ -69,6 +69,9 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                         .text(d);
                 });
 
+            force.nodes(datas)
+                .start();
+
             var bubble = d3.layout.pack()
                 .sort(null)
                 .size([diameter, diameter])
@@ -80,9 +83,6 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                 .enter().append("g")
                 .attr("class", "node")
                 .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-            force.nodes(node)
-                 .start();
 
             node.append("title")
                 .text(function(d) { return d.term + ": " + format(d.value); });
@@ -105,9 +105,7 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                         .duration(500)
                         .style("opacity", 0);
                 })
-                .on("click", function(d) {
-                    window.open("http://dp.la/bookshelf?language%5B%5D=" + d.term);
-                });
+                .call(force.drag);
 
             node.append("text")
                 .attr("dy", ".3em")
