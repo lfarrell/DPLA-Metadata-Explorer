@@ -32,3 +32,9 @@ div.tooltip {
 text {
     fill: white;
 }
+
+.legend {
+    border: 1px solid white;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
