@@ -38,3 +38,11 @@ text {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
+img {
+    margin-top: 15px;
+}
+
+svg {
+    margin-top: -25px;
+}
