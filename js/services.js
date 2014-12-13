@@ -9,6 +9,8 @@ angular.module('metadataViewerApp').service('LoadService', function() {
             $scope.data = data;
             $scope.loading = false;
             $scope.loaded = true;
+            $scope.search_term = $scope.search
+            $scope.search = '';
             $scope.$apply();
         }
     };

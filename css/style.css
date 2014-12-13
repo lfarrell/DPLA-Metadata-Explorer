@@ -10,6 +10,11 @@ h2 {
     margin-left: -15%;
 }
 
+h3 {
+    text-align: center;
+    margin-left: -10%;
+}
+
 #search_form input {
     font-size: 1em;
     height: 50px;

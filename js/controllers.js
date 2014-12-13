@@ -7,6 +7,7 @@ angular.module('metadataViewerApp').controller('dplaController', ['$scope', 'Loa
     $scope.apiSearch = function() {
         $scope.loading = true;
         $scope.loaded = false;
+
         var val = LoadService.queryFormat($scope.search);
         LoadService.file_load("dpla.php?q=" + val, $scope);
     };

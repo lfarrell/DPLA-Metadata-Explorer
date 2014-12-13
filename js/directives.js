@@ -1,8 +1,6 @@
 // port of http://bl.ocks.org/mbostock/4063269 to angular with some additions
 angular.module('metadataViewerApp').directive('bubbleChart', function() {
     function link(scope, element, attrs) {
-        d3.selectAll("svg").remove();
-
         var diameter = document.body.clientWidth,
             format = d3.format(",d"),
             color = d3.scale.category10();
@@ -16,13 +14,15 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
             .friction(0.9)
             .size([diameter, diameter]);
 
-        var svg = d3.select(element[0]).append("svg")
-            .attr("width", diameter)
-            .attr("height", diameter)
-            .attr("class", "bubble");
-
         scope.$watch('data', function(data) {
             if(!data) { return; }
+
+            d3.selectAll("svg").remove();
+
+            var svg = d3.select(element[0]).append("svg")
+                .attr("width", diameter)
+                .attr("height", diameter)
+                .attr("class", "bubble");
 
             /**
              * Format for bubble chart
