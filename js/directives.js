@@ -9,11 +9,6 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        var force = d3.layout.force()
-            .charge(-120)
-            .friction(0.9)
-            .size([diameter, diameter]);
-
         scope.$watch('data', function(data) {
             if(!data) { return; }
 
@@ -69,8 +64,15 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                         .text(d);
                 });
 
-            force.nodes(datas)
+            var force = d3.layout.force()
+                .charge(-120)
+                .friction(0.9)
+                .size([diameter, diameter]);
+
+            force.nodes([1,2,3])
                 .start();
+
+            console.log(force)
 
             var bubble = d3.layout.pack()
                 .sort(null)
@@ -228,3 +230,163 @@ angular.module('metadataViewerApp').directive('packedbubbleChart', function() {
         link: link
     }
 });
+
+
+/* Directive for creating tree maps
+* Port of http://mbostock.github.io/d3/talk/20111018/treemap.html to Angular
+*/
+angular.module('metadataViewerApp').directive('treeMap', ['tipService', 'StatsService', function(tipService, StatsService) {
+        function link(scope, element, attrs) {
+            var w = document.body.clientWidth - 80,
+                h = 900 - 180,
+                x = d3.scale.linear().range([0, w]),
+                y = d3.scale.linear().range([0, h]),
+                color = d3.scale.category10(),
+                root,
+                node;
+
+            var tip = tipService.tipDiv();
+
+            scope.$watch('data', function(data) {
+                if (!data) { return; }
+
+                var datas = {name: "root", "children": [] };
+                var keys = [];
+
+                data.forEach(function(d) {
+                    if(_.contains(keys, d.type) === false) {
+                        datas.children.push({ "name": d.type, "children": []});
+                        keys.push(d.type);
+                    }
+
+                    var i = _.indexOf(keys, d.type);
+                    datas.children[i].children.push(d);
+                });
+
+                var svg = d3.select(element[0]).append("div")
+                    .attr("class", "chart")
+                    .style("width", w + "px")
+                    .style("height", h + "px")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h)
+                    .append("g")
+                    .attr("transform", "translate(.5,.5)");
+
+                node = root = datas;
+
+                var treemap = d3.layout.treemap()
+                    .round(false)
+                    .size([w, h])
+                    .sticky(true)
+                    .value(function (d) {
+                        return d.count;
+                    });
+
+                var nodes = treemap.nodes(root)
+                    .filter(function (d) {
+                        return !d.children;
+                    });
+
+                var cell = svg.selectAll("g")
+                    .data(nodes)
+                    .enter().append("g")
+                    .attr("class", "cell")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    })
+                    .on("click", function (d) {
+                        return zoom(node == d.parent ? root : d.parent);
+                    });
+
+                cell.append("rect")
+                    .attr("width", function (d) {
+                        return d.dx - 1;
+                    })
+                    .attr("height", function (d) {
+                        return d.dy - 1;
+                    })
+                    .style("fill", function (d) {
+                        return color(d.type);
+                    })
+                    .on("mouseover", function(d) {
+                        var text = d.term + '<br/> had ' + StatsService.numFormat(d.count) + ' uses for <br/>' + d.type;
+                        tipService.tipShow(tip, text);
+                    })
+                    .on("mouseout", function(d) {
+                        tipService.tipHide(tip);
+                    });
+
+                cell.append("foreignObject")
+                    .attr("class", 'fobj')
+                    .attr("width", function (d) {
+                        return d.dx - 2;
+                    })
+                    .attr("height", function (d) {
+                        return d.dy - 2;
+                    })
+                    .style("font-size", ".8em")
+                    .style("pointer-events", "none")
+                    .text(function (d) {
+                        return d.term;
+                    });
+
+                d3.select(window).on("click", function () {
+                    zoom(root);
+                });
+
+                d3.select("select").on("change", function () {
+                    treemap.value(this.value == "size" ? size : count).nodes(root);
+                    zoom(node);
+                });
+
+                d3.select(element[0]).append("p")
+                    .text("Implementation of zoomable treemap by Mike Bostock, http://mbostock.github.io/d3/talk/20111018/treemap.html")
+                    .style("color", "gray")
+                    .style("font-size", "12px");
+
+                function size(d) {
+                    return d.count;
+                }
+
+                function count(d) {
+                    return 1;
+                }
+
+                function zoom(d) {
+                    var kx = w / d.dx, ky = h / d.dy;
+                    x.domain([d.x, d.x + d.dx]);
+                    y.domain([d.y, d.y + d.dy]);
+
+                    var t = svg.selectAll("g.cell").transition()
+                        .duration(d3.event.altKey ? 7500 : 750)
+                        .attr("transform", function (d) {
+                            return "translate(" + x(d.x) + "," + y(d.y) + ")";
+                        });
+
+                    t.select("rect")
+                        .attr("width", function (d) {
+                            return kx * d.dx - 1;
+                        })
+                        .attr("height", function (d) {
+                            return ky * d.dy - 1;
+                        });
+
+                    t.select(".fobj") // select foreignObject's class. Webkit browsers will give an empty selection otherwise
+                        .attr("width", function (d) {
+                            return kx * d.dx - 2;
+                        })
+                        .attr("height", function (d) {
+                            return kx * d.dy - 2;
+                        });
+
+                    node = d;
+                    d3.event.stopPropagation();
+                }
+            });
+        }
+        return {
+            restrict: 'C',
+            link: link
+        }
+}]);

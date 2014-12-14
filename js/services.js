@@ -19,3 +19,41 @@ angular.module('metadataViewerApp').service('LoadService', function() {
         return terms.replace(/\s+/g, '+');
     }
 });
+
+angular.module('metadataViewerApp').service('tipService', function() {
+    this.tipDiv = function() {
+        var tip = document.querySelectorAll(".tooltip"); // check that there's not already a tip div
+
+        if(tip.length) {
+            return d3.select(".tooltip");
+        }
+
+        return d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+    };
+
+    this.tipShow = function(tip, text) {
+        tip.transition()
+            .duration(200)
+            .style("opacity", .9);
+
+        tip.html(text)
+            .style("top", (d3.event.pageY-28)+"px")
+            .style("left", (d3.event.pageX-28)+"px");
+
+    };
+
+    this.tipHide = function(tip) {
+        tip.transition()
+            .duration(500)
+            .style("opacity", 0);
+    };
+});
+
+angular.module('metadataViewerApp').service('StatsService', function() {
+    this.numFormat = function(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+});
