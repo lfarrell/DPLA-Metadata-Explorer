@@ -368,10 +368,12 @@ angular.module('metadataViewerApp').directive('treeMap', ['tipService', 'StatsSe
                             zoom(node);
                         });
 
-                     /*   d3.select(element[0]).append("p")
+                        d3.select(element[0]).append("p")
+                            .attr("id", "attribution")
                             .text("Implementation of zoomable treemap by Mike Bostock, http://mbostock.github.io/d3/talk/20111018/treemap.html")
                             .style("color", "gray")
-                            .style("font-size", "12px"); */
+                            .style("font-size", "12px");
+
 
                         function size(d) {
                             return d.count;

@@ -23,6 +23,7 @@ angular.module('metadataViewerApp').service('LoadService', function() {
         $scope.loading = true;
         $scope.loaded = false;
         d3.selectAll("svg").remove();
+        d3.selectAll("#attribution").remove();
 
         return $scope;
     };
