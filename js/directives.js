@@ -72,8 +72,6 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
             force.nodes([1,2,3])
                 .start();
 
-            console.log(force)
-
             var bubble = d3.layout.pack()
                 .sort(null)
                 .size([diameter, diameter])
@@ -263,6 +261,35 @@ angular.module('metadataViewerApp').directive('treeMap', ['tipService', 'StatsSe
                     datas.children[i].children.push(d);
                 });
 
+                keys = keys.sort();
+
+                var legend = d3.select(element[0]).append("svg").attr("width", w).attr("height", 55);
+                var j = 0;
+
+                legend.selectAll('g').data(keys)
+                    .enter()
+                    .append('g').attr("width",190)
+                    .each(function(d, i) {
+                        var g = d3.select(this);
+
+                        g.append("rect")
+                            .attr("x", j)
+                            .attr("y", 15)
+                            .attr("width", 10)
+                            .attr("height", 10)
+                            .style("fill", color(d));
+
+                        g.append("text")
+                            .attr("x", j + 15)
+                            .attr("y", 25)
+                            .attr("height",30)
+                            .attr("width", d.length * 50)
+                            .style("fill", "white")
+                            .text(d);
+
+                        j += (d.length * 5) + 50;
+                    });
+
                 var svg = d3.select(element[0]).append("div")
                     .attr("class", "chart")
                     .style("width", w + "px")
@@ -301,10 +328,10 @@ angular.module('metadataViewerApp').directive('treeMap', ['tipService', 'StatsSe
 
                 cell.append("rect")
                     .attr("width", function (d) {
-                        return d.dx - 1;
+                        return d.dx - 1 > 0 ? d.dx - 1 : 0;
                     })
                     .attr("height", function (d) {
-                        return d.dy - 1;
+                        return d.dy - 1 > 0 ? d.dy - 1  : 0;
                     })
                     .style("fill", function (d) {
                         return color(d.type);
@@ -320,10 +347,11 @@ angular.module('metadataViewerApp').directive('treeMap', ['tipService', 'StatsSe
                 cell.append("foreignObject")
                     .attr("class", 'fobj')
                     .attr("width", function (d) {
-                        return d.dx - 2;
+
+                        return d.dx - 2 > 0 ? d.dx - 2  : 0;
                     })
                     .attr("height", function (d) {
-                        return d.dy - 2;
+                        return d.dy - 2 > 0 ? d.dy - 2  : 0;
                     })
                     .style("font-size", ".8em")
                     .style("pointer-events", "none")
