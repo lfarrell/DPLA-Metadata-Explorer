@@ -5,8 +5,7 @@ angular.module('metadataViewerApp').controller('dplaController', ['$scope', 'Loa
     $scope.search = '';
 
     $scope.apiSearch = function() {
-        $scope.loading = true;
-        $scope.loaded = false;
+        LoadService.canvasFormat($scope);
 
         var val = LoadService.queryFormat($scope.search);
         LoadService.file_load("dpla.php?q=" + val, $scope);
@@ -18,6 +17,8 @@ angular.module('metadataViewerApp').controller('troveController', ['$scope', 'Lo
     $scope.search = '';
 
     $scope.apiSearch = function() {
+        LoadService.canvasFormat($scope);
+
         var val = LoadService.queryFormat($scope.search);
         LoadService.file_load("trove.php?q=" + val, $scope);
     };
@@ -28,6 +29,8 @@ angular.module('metadataViewerApp').controller('digitalNzController', ['$scope',
     $scope.search = '';
 
     $scope.apiSearch = function() {
+        LoadService.canvasFormat($scope);
+
         var val = LoadService.queryFormat($scope.search);
         LoadService.file_load("digital_nz.php?q=" + val, $scope);
     };
@@ -38,6 +41,8 @@ angular.module('metadataViewerApp').controller('europeanaController', ['$scope',
     $scope.search = '';
 
     $scope.apiSearch = function() {
+        LoadService.canvasFormat($scope);
+
         var val = LoadService.queryFormat($scope.search);
         LoadService.file_load("europeana.php?q=" + val, $scope);
     };

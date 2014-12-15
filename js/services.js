@@ -17,7 +17,15 @@ angular.module('metadataViewerApp').service('LoadService', function() {
 
     this.queryFormat = function(terms) {
         return terms.replace(/\s+/g, '+');
-    }
+    };
+
+    this.canvasFormat = function($scope) {
+        $scope.loading = true;
+        $scope.loaded = false;
+        d3.selectAll("svg").remove();
+
+        return $scope;
+    };
 });
 
 angular.module('metadataViewerApp').service('tipService', function() {
