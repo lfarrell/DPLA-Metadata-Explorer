@@ -19,42 +19,42 @@ $i = 0;
 foreach($formats as $format) {
     $values[$i]['term'] = $format['term'];
     $values[$i]['count'] = $format['count'];
-    $values[$i]['type'] = 'format';
+    $values[$i]['type'] = 'Format';
     $i++;
 }
 
 foreach($providers as $provider) {
     $values[$i]['term'] = $provider['term'];
     $values[$i]['count'] = $provider['count'];
-    $values[$i]['type'] = 'provider';
+    $values[$i]['type'] = 'Provider';
     $i++;
 }
 
 foreach($languages as $language) {
     $values[$i]['term'] = $language['term'];
     $values[$i]['count'] = $language['count'];
-    $values[$i]['type'] = 'language';
+    $values[$i]['type'] = 'Language';
     $i++;
 }
 
 foreach($countries as $country) {
     $values[$i]['term'] = $country['term'];
     $values[$i]['count'] = $country['count'];
-    $values[$i]['type'] = 'country';
+    $values[$i]['type'] = 'Country';
     $i++;
 }
 
 foreach($states as $state) {
     $values[$i]['term'] = $state['term'];
     $values[$i]['count'] = $state['count'];
-    $values[$i]['type'] = 'state';
+    $values[$i]['type'] = 'State';
     $i++;
 }
 
 foreach($subjects as $subject) {
     $values[$i]['term'] = $subject['term'];
     $values[$i]['count'] = $subject['count'];
-    $values[$i]['type'] = 'subject';
+    $values[$i]['type'] = 'Subject';
     $i++;
 }
 

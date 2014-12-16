@@ -20,42 +20,42 @@ $i = 0;
 foreach($place_names as $key => $place_name) {
     $values[$i]['term'] = $key;
     $values[$i]['count'] = $place_name;
-    $values[$i]['type'] = 'place';
+    $values[$i]['type'] = 'Place';
     $i++;
 }
 
 foreach($creators as $key => $creator) {
     $values[$i]['term'] = $key;
     $values[$i]['count'] = $creator;
-    $values[$i]['type'] = 'creator';
+    $values[$i]['type'] = 'Creator';
     $i++;
 }
 
 foreach($years as $key => $year) {
     $values[$i]['term'] = $key;
     $values[$i]['count'] = $year;
-    $values[$i]['type'] = 'year';
+    $values[$i]['type'] = 'Year';
     $i++;
 }
 
 foreach($categories as $key => $category) {
     $values[$i]['term'] = $key;
     $values[$i]['count'] = $category;
-    $values[$i]['type'] = 'category';
+    $values[$i]['type'] = 'Category';
     $i++;
 }
 
 foreach($languages as $key => $language) {
     $values[$i]['term'] = $key;
     $values[$i]['count'] = $language;
-    $values[$i]['type'] = 'language';
+    $values[$i]['type'] = 'Language';
     $i++;
 }
 
 foreach($providers as $key => $provider) {
     $values[$i]['term'] = $key;
     $values[$i]['count'] = $provider;
-    $values[$i]['type'] = 'provider';
+    $values[$i]['type'] = 'Provider';
     $i++;
 }
 
