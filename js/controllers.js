@@ -25,7 +25,7 @@ angular.module('metadataViewerApp').controller('troveController', ['$scope', 'Lo
 }]);
 
 angular.module('metadataViewerApp').controller('digitalNzController', ['$scope', 'LoadService', function($scope, LoadService) {
-    $scope.header = 'Digital NZ';
+    $scope.header = 'Digital New Zealand';
     $scope.search = '';
 
     $scope.apiSearch = function() {
