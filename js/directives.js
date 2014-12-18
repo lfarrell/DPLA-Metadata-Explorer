@@ -1,5 +1,52 @@
+
+angular.module('metadataViewerApp').directive('forceChart', function() {
+    function link(scope, element, attrs) {
+        var width = document.body.clientWidth - 50,
+            height = document.body.clientHeight - 50,
+            color = d3.scale.category10();
+
+
+
+        scope.$watch('data', function(data) {
+            if(!data) { return; }
+
+            var svg = d3.select(element[0]).append("svg")
+                .attr("width", width)
+                .attr("height", height + 100);
+
+            var data_nodes = { nodes: data };
+
+            var force = d3.layout.force()
+                .nodes(data_nodes.nodes)
+                .size([width, height])
+                .charge([-10])
+                .start();
+
+            var nodes = svg.selectAll("circle")
+                .data(data_nodes.nodes)
+                .enter()
+                .append("circle")
+                .attr("r", function(d) { return d.count * .001; })
+                .style("fill", function(d) {
+                    return color(d.type);
+                })
+                .call(force.drag);
+
+            force.on("tick", function() {
+                nodes.attr("cx", function(d) { return d.x; })
+                     .attr("cy", function(d) { return d.y; });
+            });
+        });
+    }
+
+    return {
+        restrict: 'C',
+        link: link
+    }
+});
+
 // port of http://bl.ocks.org/mbostock/4063269 to angular with some additions
-angular.module('metadataViewerApp').directive('bubbleChart', function() {
+angular.module('metadataViewerApp').directive('bubbleChart' ['tipService', 'StatsService', function(tipService, StatsService) {
     function link(scope, element, attrs) {
         var diameter = document.body.clientWidth,
             format = d3.format(",d"),
@@ -62,14 +109,6 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                         .text(d);
                 });
 
-            var force = d3.layout.force()
-                .charge(-120)
-                .friction(0.9)
-                .size([diameter, diameter]);
-
-            force.nodes([1,2,3])
-                .start();
-
             var bubble = d3.layout.pack()
                 .sort(null)
                 .size([diameter, diameter])
@@ -83,7 +122,7 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                 .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
             node.append("title")
-                .text(function(d) { return d.term + ": " + format(d.value); });
+                .text(function(d) { return d.term + ": " + StatsService.numFormat(d.value); });
 
             node.append("circle")
                 .attr("r", function(d) { return d.r; })
@@ -93,7 +132,7 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                         .duration(200)
                         .style("opacity", .9);
 
-                    div.html(format(d.value) + " items for "  + d.term
+                    div.html(StatsService.numFormat(d.value) + " items for "  + d.term
                             + "<br/>Click to view items")
                         .style("top", (d3.event.pageY-28)+"px")
                         .style("left", (d3.event.pageX-28)+"px");
@@ -110,11 +149,6 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
                 .style("text-anchor", "middle")
                 .style("pointer-events", "none")
                 .text(function(d) { return d.term.substring(0, d.r / 3); });
-
-            force.on("tick", function() {
-                node.attr("cx", function(d) { return d.x; })
-                    .attr("cy", function(d) { return d.y; });
-            });
         });
 
         function classes(root) {
@@ -129,10 +163,6 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
             return {children: classes};
         }
 
-        function formatCount(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
         d3.select(self.frameElement).style("height", diameter + "px");
     }
 
@@ -140,7 +170,7 @@ angular.module('metadataViewerApp').directive('bubbleChart', function() {
         restrict: 'C',
         link: link
     }
-});
+}]);
 
 /**
  * Port of http://bl.ocks.org/mbostock/7607535 to Angular.js
@@ -418,6 +448,7 @@ angular.module('metadataViewerApp').directive('treeMap', ['tipService', 'StatsSe
                 }
             });
         }
+
         return {
             restrict: 'C',
             link: link
