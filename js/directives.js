@@ -19,7 +19,7 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
             var force = d3.layout.force()
                 .nodes(data_nodes.nodes)
                 .size([width, height])
-                .charge([-10])
+                .charge(function(d) { return -d.count * .01 })
                 .start();
 
             var nodes = svg.selectAll("circle")
