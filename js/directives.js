@@ -12,30 +12,52 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
 
             var svg = d3.select(element[0]).append("svg")
                 .attr("width", width)
-                .attr("height", height + 100);
+                .attr("height", 900)
+                .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom));
 
             var data_nodes = { nodes: data };
+
+            var scale = d3.scale.linear()
+                .domain(d3.extent(data_nodes.nodes, function(d) { return d.count; } ))
+                .range([1, 75]);
 
             var force = d3.layout.force()
                 .nodes(data_nodes.nodes)
                 .size([width, height])
-                .charge(function(d) { return -d.count * .01 })
+                .charge(function(d) { return -d.count * .008; })
                 .start();
 
             var nodes = svg.selectAll("circle")
                 .data(data_nodes.nodes)
                 .enter()
                 .append("circle")
-                .attr("r", function(d) { return d.count * .001; })
+                .attr("r", function(d) { return scale(d.count); })
                 .style("fill", function(d) {
                     return color(d.type);
                 })
                 .call(force.drag);
 
+            nodes.append("text")
+                .attr("dy", ".3em")
+                .style("text-anchor", "middle")
+                .style("pointer-events", "none")
+                .text(function(d) { return d.term.substring(0, d.r / 3); });
+
             force.on("tick", function() {
                 nodes.attr("cx", function(d) { return d.x; })
                      .attr("cy", function(d) { return d.y; });
             });
+
+         /*   var zoomListener = d3.behavior.zoom()
+                .scaleExtent([1, 7])
+                .on("zoom", zoomHandler); */
+
+            function zoom() {
+                svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            }
+
+          //  zoomListener(svg);
+
         });
     }
 
