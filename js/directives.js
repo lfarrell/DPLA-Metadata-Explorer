@@ -48,6 +48,8 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
                     j += (d.length * 5) + 50;
                 });
 
+            legend.attr("transform", "translate(" + width/3.5 + ",0)")
+
             var data_nodes = { nodes: data };
 
             var scale = d3.scale.linear()
