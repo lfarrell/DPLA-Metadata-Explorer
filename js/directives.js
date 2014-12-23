@@ -8,24 +8,66 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
         scope.$watch('data', function(data) {
             if(!data) { return; }
 
+            var keys = [];
+
+            data.forEach(function(d) {
+                if(_.contains(keys, d.type) === false) {
+                    keys.push(d.type);
+                }
+            });
+
+            keys = keys.sort();
+
+            var legend = d3.select(element[0])
+                .append("svg")
+                .attr("width", width)
+                .attr("height", 55);
+            var j = 0;
+
+            legend.selectAll('g').data(keys)
+                .enter()
+                .append('g').attr("width",190)
+                .each(function(d, i) {
+                    var g = d3.select(this);
+
+                    g.append("rect")
+                        .attr("x", j)
+                        .attr("y", 15)
+                        .attr("width", 10)
+                        .attr("height", 10)
+                        .style("fill", color(d));
+
+                    g.append("text")
+                        .attr("x", j + 15)
+                        .attr("y", 25)
+                        .attr("height",30)
+                        .attr("width", d.length * 50)
+                        .style("fill", "white")
+                        .text(d);
+
+                    j += (d.length * 5) + 50;
+                });
+
             var data_nodes = { nodes: data };
 
             var scale = d3.scale.linear()
                 .domain(d3.extent(
                     data_nodes.nodes, function(d) { return d.count; })
                 )
-                .range([1, 75]);
+                .range([5, 50]);
 
             var force = d3.layout.force()
                 .nodes(data_nodes.nodes)
                 .size([width, height + 175])
-                .charge(function(d) { return -d.count * .008; })
+                .charge(function(d) { return -10; })
                 .start();
 
             var svg = d3.select(element[0]).append("svg")
                 .attr("width", width)
                 .attr("height", 900)
-                .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom));
+                .append("g")
+                .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+                .append("g");
 
             var nodes = svg.selectAll("g")
                 .data(data_nodes.nodes);
@@ -40,7 +82,6 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
                 });
 
                var texts= nodes.append("text")
-                .attr("dy", ".3em")
                 .style("text-anchor", "middle")
                 .style("pointer-events", "none")
                 .text(function(d) { return d.term.substring(0, scale(d.count) / 3); });
@@ -50,7 +91,7 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
                        .attr("cy", function(d) { return d.y; });
 
                 texts.attr("dx", function(d) { return d.x; })
-                    .attr("dy", function(d) { return d.y; });
+                     .attr("dy", function(d) { return d.y; });
             });
 
          /*   var zoomListener = d3.behavior.zoom()
