@@ -1,9 +1,11 @@
 
-angular.module('metadataViewerApp').directive('forceChart', function() {
+angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'StatsService', function(tipService, StatsService) {
     function link(scope, element, attrs) {
         var width = document.body.clientWidth - 50,
             height = document.body.clientHeight - 50,
-            color = d3.scale.category10();
+            color = d3.scale.category10(),
+            tip = tipService.tipDiv(),
+            margin = { 'top': 75, bottom: 25, left: 50, right: 25 };
 
         scope.$watch('data', function(data) {
             if(!data) { return; }
@@ -27,7 +29,7 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
             legend.selectAll('g').data(keys)
                 .enter()
                 .append('g').attr("width",190)
-                .each(function(d, i) {
+                .each(function(d) {
                     var g = d3.select(this);
 
                     g.append("rect")
@@ -48,7 +50,11 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
                     j += (d.length * 5) + 50;
                 });
 
-            legend.attr("transform", "translate(" + width/3.5 + ",0)")
+            legend.attr("transform", "translate(" + width/3.5 + ",0)");
+
+            var zoom = d3.behavior.zoom()
+                .scaleExtent([1, 10])
+                .on("zoom", zooming);
 
             var data_nodes = { nodes: data };
 
@@ -68,52 +74,57 @@ angular.module('metadataViewerApp').directive('forceChart', function() {
                 .attr("width", width)
                 .attr("height", 900)
                 .append("g")
-                .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
-                .append("g");
+                .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+                .call(zoom);
 
-            var nodes = svg.selectAll("g")
-                .data(data_nodes.nodes);
+            var rect = svg.append("rect")
+                .attr("width", width)
+                .attr("height", height)
+                .style("fill", "none")
+                .style("pointer-events", "all");
 
-            nodes.enter().append("g").call(force.drag);
+            var container = svg.append("g");
+
+            var nodes = container.append('g')
+                .selectAll("circle")
+                .data(data_nodes.nodes)
+                .enter();
 
             var circles = nodes
                 .append("circle")
                 .attr("r", function(d) { return scale(d.count); })
                 .style("fill", function(d) {
                     return color(d.type);
-                });
-
-               var texts= nodes.append("text")
-                .style("text-anchor", "middle")
-                .style("pointer-events", "none")
-                .text(function(d) { return d.term.substring(0, scale(d.count) / 3); });
+                })
+                .on("mouseover", function(d) {
+                    var text = d.term + ': ' + StatsService.numFormat(d.count);
+                    tipService.tipShow(tip, text);
+                })
+                .on("mouseout", function(d) {
+                    tipService.tipHide(tip);
+                })
+                .call(force.drag);
 
             force.on("tick", function() {
                 circles.attr("cx", function(d) { return d.x; })
                        .attr("cy", function(d) { return d.y; });
-
-                texts.attr("dx", function(d) { return d.x; })
-                     .attr("dy", function(d) { return d.y; });
             });
 
-         /*   var zoomListener = d3.behavior.zoom()
-                .scaleExtent([1, 7])
-                .on("zoom", zoomHandler); */
-
-            function zoom() {
-                svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            function zooming() {
+                container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
             }
 
-          //  zoomListener(svg);
 
         });
+
+
     }
 
     return {
         restrict: 'C',
         link: link
     }
-});
+}]);
 
 // port of http://bl.ocks.org/mbostock/4063269 to angular with some additions
 angular.module('metadataViewerApp').directive('bubbleChart' ['tipService', 'StatsService', function(tipService, StatsService) {
