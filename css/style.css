@@ -47,3 +47,28 @@ text {
 img {
     margin-top: 15px;
 }
+
+.round-border {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.panel {
+    display: none;
+    width: 300px;
+    height: 100%;
+    margin-top: 50px;
+    padding: 20px;
+    background-color: darkred;
+    color: #fff;
+    opacity: 0.9;
+}
+
+.about {
+    float: right;
+}
+
+#about-btn {
+    margin-left: 15px;
+}
