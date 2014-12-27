@@ -5,7 +5,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
             height = document.body.clientHeight - 50,
             color = d3.scale.category10(),
             tip = tipService.tipDiv(),
-            margin = { 'top': 200, bottom: 25, left: 50, right: 25 };
+            margin = { 'top':150, bottom: 25, left: 50, right: 25 };
 
         scope.$watch('data', function(data) {
             if(!data) { return; }
@@ -74,7 +74,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .charge(function(d) {
                     var charging = -scale(d.count) * 10;
 
-                    if(charging > -100)  {
+                    if(charging > -55)  {
                         return -8;
                     }
 
@@ -85,8 +85,9 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
             var svg = d3.select(element[0]).append("svg")
                 .attr("width", width)
                 .attr("height", 900)
+                .attr("class", "force")
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                 .call(zoom);
 
             var rect = svg.append("rect")
