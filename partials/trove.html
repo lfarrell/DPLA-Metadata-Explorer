@@ -6,12 +6,27 @@
             <button class="btn btn-lg btn-info" type="submit" value="Search">Search</button>
         </form>
     </div>
+</div>
+<div class="row">
     <div class="col-md-offset-5 col-md-7" ng-show="loading">
         <img src="imgs/ajax.gif">
     </div>
+</div>
+<div class="row">
     <div class="col-md-12" ng-show="loaded">
-        <h3>Search: {{ search_term }}</h3>
+        <a class="btn btn-info col-md-1 ng-isolate-scope" id="about-btn" pageslide="left" ng-show="loaded" ps-custom-top="40" href="#about">About</a>
+        <h3 class="col-md-11" ng-show="loaded">Search: {{ search_term }}</h3>
     </div>
-    <div class="col-md-12 bubbleChart" ng-show="loaded"></div>
-    <div class="col-md-12" ng-show="loaded"><img src="imgs/API-light.png" alt="Powered by Trove"></div>
+</div>
+<div class="row" ng-show="loaded">
+    <div class="col-md-12 bubbleChart"></div>
+    <div class="col-md-12"><img src="imgs/API-light.png" alt="Powered by Trove"></div>
+</div>
+<div id="about" class="col-md-12 panel">
+    <a class="btn btn-primary about" id="about-close">Close</a>
+    <p>Search Trove for a term or terms and view the metadata associated with your search.
+        You can view the metadata in various ways, either as treemap or as force directed bubble chart. Click either chart type
+        to zoom in further.</p>
+    <p>Hover over a block or bubble to view info about it.</p>
+    <p>The available metadata fields are: country, provider, language, rights, type and year.</p>
 </div>
