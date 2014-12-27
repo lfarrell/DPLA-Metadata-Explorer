@@ -5,7 +5,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
             height = document.body.clientHeight - 50,
             color = d3.scale.category10(),
             tip = tipService.tipDiv(),
-            margin = { 'top': 75, bottom: 25, left: 50, right: 25 };
+            margin = { 'top': 200, bottom: 25, left: 50, right: 25 };
 
         scope.$watch('data', function(data) {
             if(!data) { return; }
@@ -56,6 +56,10 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .scaleExtent([1, 10])
                 .on("zoom", zooming);
 
+            var drag = d3.behavior.drag()
+                .origin(function(d) { return d; })
+                .on("drag", dragged);
+
             var data_nodes = { nodes: data };
 
             var scale = d3.scale.linear()
@@ -67,7 +71,15 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
             var force = d3.layout.force()
                 .nodes(data_nodes.nodes)
                 .size([width, height + 175])
-                .charge(function(d) { return -10; })
+                .charge(function(d) {
+                    var charging = -scale(d.count) * 10;
+
+                    if(charging > -100)  {
+                        return -8;
+                    }
+
+                    return charging;
+                })
                 .start();
 
             var svg = d3.select(element[0]).append("svg")
@@ -103,7 +115,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .on("mouseout", function(d) {
                     tipService.tipHide(tip);
                 })
-                .call(force.drag);
+                .call(drag);
 
             force.on("tick", function() {
                 circles.attr("cx", function(d) { return d.x; })
@@ -114,10 +126,11 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
             }
 
-
+            function dragged(d) {
+                d3.event.sourceEvent.stopPropagation();
+                d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+            }
         });
-
-
     }
 
     return {
