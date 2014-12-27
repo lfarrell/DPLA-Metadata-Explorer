@@ -6,11 +6,26 @@
             <button class="btn btn-lg btn-info" type="submit" value="Search">Search</button>
         </form>
     </div>
-    <div class="col-md-offset-5 col-md-7" ng-show="loading">
-        <img src="imgs/ajax.gif">
+</div>
+<div class="row">
+    <div class="col-md-offset-5 col-md-7">
+        <img src="imgs/ajax.gif"  ng-show="loading">
     </div>
-    <div class="col-md-12" ng-show="loaded">
-        <h3>Search: {{ search_term }}</h3>
-    </div>
+</div>
+<div class="row">
+    <a class="btn btn-info col-md-1 ng-isolate-scope" id="about-btn" pageslide="left" ng-show="loaded" ps-custom-top="40" href="#about">About</a>
+    <h3 class="col-md-11" ng-show="loaded">Search: {{ search_term }}</h3>
+</div>
+<div class="row">
     <div class="col-md-12 force-chart" ng-show="loaded"></div>
+</div>
+<div id="about" class="col-md-12 panel">
+    <a class="btn btn-primary about" id="about-close">Close</a>
+    <p>You can sub select graph elements. In the smaller line graph click and drag the mouse to select a range.
+        This will automatically scale the other graphs to just the highlighted elements.  Clicking inside the graph,
+        but outside the highlighted area will clear your selection.</p>
+    <p>In the bar charts hovering over a column will display the total for that column.
+        Clicking a column will filter all graphs to show just information within that range.
+        Clicking the column again will remove it from the selection.</p>
+    <p>The map works the same way. Click a column to filter all charts on uses just from that state.</p>
 </div>
