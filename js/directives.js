@@ -4,7 +4,8 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
         var width = document.body.clientWidth - 50,
             height = document.body.clientHeight - 50,
             color = d3.scale.category10(),
-            margin = { 'top':150, bottom: 25, left: 0, right: 25 };
+            tip = tipService.tipDiv(),
+            margin = { 'top':125, bottom: 25, left: 0, right: 25 };
 
         scope.$watch('data', function(data) {
             if(!data) { return; }
@@ -65,7 +66,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .domain(d3.extent(
                     data_nodes.nodes, function(d) { return d.count; })
                 )
-                .range([5, 25]);
+                .range([5, 30]);
 
             var force = d3.layout.force()
                 .nodes(data_nodes.nodes)
@@ -95,9 +96,8 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .style("fill", "none")
                 .style("pointer-events", "all");
 
-            var container = svg;
 
-            var nodes = container
+            var nodes = svg
                 .selectAll("text")
                 .data(data_nodes.nodes)
                 .enter();
@@ -108,8 +108,15 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 })
                 .style("font-size", function(d) { return scale(d.count); })
                 .style("text-anchor", "middle")
-                .style("pointer-events", "none")
+
                 .text(function(d) { return d.term; })
+                .on("mouseover", function(d) {
+                    var text = d.term + '<br/> had ' + StatsService.numFormat(d.count) + ' uses for <br/>' + d.type;
+                    tipService.tipShow(tip, text);
+                })
+                .on("mouseout", function(d) {
+                    tipService.tipHide(tip);
+                })
                 .call(drag);
 
             force.on("tick", function() {
@@ -118,7 +125,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
             });
 
             function zooming() {
-                container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
             }
 
             function dragged(d) {
