@@ -4,7 +4,6 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
         var width = document.body.clientWidth - 50,
             height = document.body.clientHeight - 50,
             color = d3.scale.category10(),
-            tip = tipService.tipDiv(),
             margin = { 'top':150, bottom: 25, left: 0, right: 25 };
 
         scope.$watch('data', function(data) {
@@ -66,19 +65,19 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .domain(d3.extent(
                     data_nodes.nodes, function(d) { return d.count; })
                 )
-                .range([5, 50]);
+                .range([5, 25]);
 
             var force = d3.layout.force()
                 .nodes(data_nodes.nodes)
                 .size([width, height + 175])
                 .charge(function(d) {
-                    var charging = -scale(d.count) * 10;
+                    var charging = -scale(d.term.length) * 10;
 
                     if(charging > -55)  {
                         return -8;
                     }
 
-                    return charging / 1.2;
+                    return -charging * 1.5;
                 })
                 .start();
 
@@ -96,31 +95,26 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .style("fill", "none")
                 .style("pointer-events", "all");
 
-            var container = svg.append("g");
+            var container = svg;
 
-            var nodes = container.append('g')
-                .selectAll("circle")
+            var nodes = container
+                .selectAll("text")
                 .data(data_nodes.nodes)
                 .enter();
 
-            var circles = nodes
-                .append("circle")
-                .attr("r", function(d) { return scale(d.count); })
+            var texts = nodes.append("text")
                 .style("fill", function(d) {
                     return color(d.type);
                 })
-                .on("mouseover", function(d) {
-                    var text = d.term + ': ' + StatsService.numFormat(d.count);
-                    tipService.tipShow(tip, text);
-                })
-                .on("mouseout", function(d) {
-                    tipService.tipHide(tip);
-                })
+                .style("font-size", function(d) { return scale(d.count); })
+                .style("text-anchor", "middle")
+                .style("pointer-events", "none")
+                .text(function(d) { return d.term; })
                 .call(drag);
 
             force.on("tick", function() {
-                circles.attr("cx", function(d) { return d.x; })
-                       .attr("cy", function(d) { return d.y; });
+                texts.attr("dx", function(d) { return d.x; })
+                    .attr("dy", function(d) { return d.y; })
             });
 
             function zooming() {
