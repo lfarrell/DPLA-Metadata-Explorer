@@ -5,7 +5,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
             height = document.body.clientHeight - 50,
             color = d3.scale.category10(),
             tip = tipService.tipDiv(),
-            margin = { 'top':125, bottom: 25, left: 0, right: 25 };
+            margin = { 'top':250, bottom: 25, left: 0, right: 25 };
 
         scope.$watch('data', function(data) {
             if(!data) { return; }
@@ -46,7 +46,6 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                         .attr("y", 25)
                         .attr("height",30)
                         .attr("width", d.length * 50)
-                        .style("fill", "white")
                         .text(d);
 
                     j += (d.length * 5) + 50;
@@ -72,23 +71,25 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .nodes(data_nodes.nodes)
                 .size([width, height + 175])
                 .charge(function(d) {
-                    var charging = -scale(d.term.length) * 10;
+                    var charging = -scale(d.term.length) + scale(d.count) * 10;
 
-                    if(charging > -55)  {
+                    if(charging > -100)  {
+                        return -25;
+                    } else if(charging > -300) {
                         return -8;
                     }
+                        return -charging * 2;
 
-                    return -charging * 1.5;
                 })
                 .start();
 
             var svg = d3.select(element[0]).append("svg")
+                 .call(zoom)
                 .attr("width", width)
                 .attr("height", 900)
                 .attr("class", "force")
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(zoom);
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             var rect = svg.append("rect")
                 .attr("width", width)
@@ -96,8 +97,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .style("fill", "none")
                 .style("pointer-events", "all");
 
-
-            var nodes = svg
+            var nodes = svg.append("g")
                 .selectAll("text")
                 .data(data_nodes.nodes)
                 .enter();
