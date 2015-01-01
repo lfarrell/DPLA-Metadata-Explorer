@@ -125,9 +125,8 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .style("fill", function(d) {
                     return color(d.type);
                 })
-                .style("font-size", function(d) { return scale(d.count); })
+                .style("font-size", function(d) { return scale(d.count) + "px"; })
                 .style("text-anchor", "middle")
-
                 .text(function(d) { return d.term; })
                 .on("mouseover", function(d) {
                     var text = d.term + '<br/> had ' + StatsService.numFormat(d.count) + ' uses for <br/>' + d.type;
@@ -137,7 +136,7 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                     tipService.tipHide(tip);
                 })
                 .on("click", function(d) {
-                    window.open(provider(p) + d.term);
+                    window.open(provider(scope.provider) + '"' + d.term + '"');
                 })
                 .call(drag);
 
