@@ -7,6 +7,25 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
             tip = tipService.tipDiv(),
             margin = { 'top':250, bottom: 25, left: 0, right: 25 };
 
+        var provider = function(p) {
+            switch (p) {
+                case "dpla":
+                    return "http://dp.la/search?q=";
+                    break;
+                case "euro":
+                    return "http://www.europeana.eu/portal/search.html?query=";
+                    break;
+                case "digitalnz":
+                    return "http://www.digitalnz.org/records?text=";
+                    break;
+                case "trove":
+                    return "http://trove.nla.gov.au/result?q=";
+                    break;
+                default:
+                    return "http://dp.la/search?q=";
+            }
+        };
+
         scope.$watch('data', function(data) {
             if(!data) { return; }
 
@@ -117,6 +136,9 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
                 .on("mouseout", function(d) {
                     tipService.tipHide(tip);
                 })
+                .on("click", function(d) {
+                    window.open(provider(p) + d.term);
+                })
                 .call(drag);
 
             force.on("tick", function() {
@@ -137,6 +159,10 @@ angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'Stat
 
     return {
         restrict: 'C',
+        scope: {
+            'provider': '@',
+            'data': '='
+        },
         link: link
     }
 }]);
