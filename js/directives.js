@@ -472,10 +472,9 @@ angular.module('metadataViewerApp').directive('treeMap', ['tipService', 'StatsSe
                             .attr("transform", function (d) {
                                 return "translate(" + d.x + "," + d.y + ")";
                             })
-                            .on("click", function (d) {
+                            .on("dblclick", function (d) {
                                 return zoom(node == d.parent ? root : d.parent);
                             });
-
 
                         cell.append("rect")
                             .attr("width", function (d) {

@@ -1,5 +1,9 @@
 "use strict";
 
+angular.module('metadataViewerApp').controller('mainController', ['$scope', function($scope) {
+    $scope.header = 'Metadata Explorer';
+}]);
+
 angular.module('metadataViewerApp').controller('dplaController', ['$scope', 'LoadService', function($scope, LoadService) {
     $scope.header = 'DPLA';
     $scope.search = '';

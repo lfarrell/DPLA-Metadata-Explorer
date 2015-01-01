@@ -6,11 +6,11 @@ angular.module('metadataViewerApp').config(function($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'partials/main.html',
-            controller: 'dplaController'
+            controller: 'mainController'
         })
-        .when('/trove', {
-            templateUrl: 'partials/trove.html',
-            controller: 'troveController'
+        .when('/dpla', {
+            templateUrl: 'partials/dpla.html',
+            controller: 'dplaController'
         })
         .when('/digital_nz', {
             templateUrl: 'partials/digital_nz.html',
@@ -19,6 +19,10 @@ angular.module('metadataViewerApp').config(function($routeProvider) {
         .when('/europeana', {
             templateUrl: 'partials/europeana.html',
             controller: 'europeanaController'
+        })
+        .when('/trove', {
+            templateUrl: 'partials/trove.html',
+            controller: 'troveController'
         })
         .otherwise({
             redirectTo: '/'
