@@ -1,3 +1,60 @@
+angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'StatsService', function(tipService, StatsService) {
+    function link() {
+        var width = document.body.clientWidth - 50,
+            height = document.body.clientHeight - 50,
+            color = d3.scale.category10(),
+            tip = tipService.tipDiv(),
+            margin = { 'top':250, bottom: 25, left: 0, right: 25 };
+
+        var provider = function(p) {
+            switch (p) {
+                case "dpla":
+                    return "http://dp.la/search?q=";
+                    break;
+                case "euro":
+                    return "http://www.europeana.eu/portal/search.html?query=";
+                    break;
+                case "digitalnz":
+                    return "http://www.digitalnz.org/records?text=";
+                    break;
+                case "trove":
+                    return "http://trove.nla.gov.au/result?q=";
+                    break;
+                default:
+                    return "http://dp.la/search?q=";
+            }
+        };
+
+        scope.$watch('data', function(data) {
+            if(!data) { return; }
+
+            var datas = {name: "root", "children": [] };
+            var keys = [];
+
+            data.forEach(function(d) {
+                if(_.contains(keys, d.type) === false) {
+                    datas.children.push({ "name": d.type, "children": []});
+                    keys.push(d.type);
+                }
+
+                var i = _.indexOf(keys, d.type);
+                datas.children[i].children.push(d);
+            });
+
+            keys = keys.sort();
+        });
+    }
+
+    return {
+        restrict: 'C',
+        scope: {
+            'provider': '@',
+            'data': '='
+        },
+        link: link
+    }
+
+}]);
 
 angular.module('metadataViewerApp').directive('forceChart', ['tipService', 'StatsService', function(tipService, StatsService) {
     function link(scope, element, attrs) {
