@@ -9,8 +9,9 @@ angular.module('metadataViewerApp').service('LoadService', function() {
             $scope.data = data;
             $scope.loading = false;
             $scope.loaded = true;
-            $scope.search_term = $scope.search
+            $scope.search_term = $scope.search;
             $scope.search = '';
+
             $scope.$apply();
         }
     };
@@ -24,6 +25,14 @@ angular.module('metadataViewerApp').service('LoadService', function() {
         $scope.loaded = false;
         d3.selectAll("svg").remove();
         d3.selectAll("#attribution").remove();
+
+        return $scope;
+    };
+
+    this.chartChange = function($scope) {
+        $scope.graphType = function(t) {
+            $scope.chart = t;
+        };
 
         return $scope;
     };

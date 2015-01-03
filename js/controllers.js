@@ -14,6 +14,8 @@ angular.module('metadataViewerApp').controller('dplaController', ['$scope', 'Loa
         var val = LoadService.queryFormat($scope.search);
         LoadService.file_load("dpla.php?q=" + val, $scope);
     };
+
+    LoadService.chartChange($scope);
 }]);
 
 angular.module('metadataViewerApp').controller('troveController', ['$scope', 'LoadService', function($scope, LoadService) {
