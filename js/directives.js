@@ -89,7 +89,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
              } else if(chart_type === 'cloud') {
                 textCloud();
              } else {
-                textCloud();
+                treeMap();
              }
 
             /**
