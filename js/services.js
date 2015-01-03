@@ -23,8 +23,8 @@ angular.module('metadataViewerApp').service('LoadService', function() {
     this.canvasFormat = function($scope) {
         $scope.loading = true;
         $scope.loaded = false;
+
         d3.selectAll("svg").remove();
-        d3.selectAll("#attribution").remove();
 
         return $scope;
     };

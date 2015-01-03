@@ -44,12 +44,6 @@ text:hover {
     cursor: pointer;
 }
 
-.legend {
-    border: 1px solid white;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
 img {
     margin-top: 15px;
 }
