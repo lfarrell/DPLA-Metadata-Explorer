@@ -50,36 +50,45 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
             /**
              * Add the legend
              */
-            var legend = d3.select(element[0])
-                .append("svg")
-                .attr("width", width)
-                .attr("height", 55)
-                .attr("transform", "translate(" + width/3.5 + ",0)");
+            if(!document.querySelectorAll(".legend").length) {
+                var legend = d3.select(element[0])
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", 55)
+                    .attr("class", "legend")
+                    .attr("transform", "translate(" + width/3.5 + ",0)");
 
-            var j = 0;
+                var j = 0;
 
-            legend.selectAll('g').data(keys)
-                .enter()
-                .append('g').attr("width",190)
-                .each(function(d) {
-                    var g = d3.select(this);
+                legend.selectAll('g').data(keys)
+                    .enter()
+                    .append('g').attr("width",190)
+                    .each(function(d) {
+                        var g = d3.select(this);
 
-                    g.append("rect")
-                        .attr("x", j)
-                        .attr("y", 15)
-                        .attr("width", 10)
-                        .attr("height", 10)
-                        .style("fill", color(d));
+                        g.append("rect")
+                            .attr("x", j)
+                            .attr("y", 15)
+                            .attr("width", 10)
+                            .attr("height", 10)
+                            .style("fill", color(d));
 
-                    g.append("text")
-                        .attr("x", j + 15)
-                        .attr("y", 25)
-                        .attr("height",30)
-                        .attr("width", d.length * 50)
-                        .text(d);
+                        g.append("text")
+                            .attr("x", j + 15)
+                            .attr("y", 25)
+                            .attr("height",30)
+                            .attr("width", d.length * 50)
+                            .text(d);
 
-                    j += (d.length * 5) + 50;
-                });
+                        j += (d.length * 5) + 50;
+                    });
+            }
+
+            /**
+             * Clean up any extraneous svg elements on transition
+             */
+            d3.selectAll(".graph").transition().remove();
+            d3.selectAll("#attribution").remove();
 
             /**
              * Start the graphing
@@ -89,8 +98,10 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
              } else if(chart_type === 'cloud') {
                 textCloud();
              } else {
-                treeMap();
+                textCloud();
              }
+
+
 
             /**
              * Graph types
@@ -135,7 +146,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                     .call(zoom)
                     .attr("width", width)
                     .attr("height", 900)
-                    .attr("class", "force")
+                    .attr("class", "graph")
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -195,6 +206,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                     .append("svg")
                     .attr("width", width)
                     .attr("height", height)
+                    .attr("class", "graph")
                     .append("g")
                     .attr("transform", "translate(.5,.5)");
 
