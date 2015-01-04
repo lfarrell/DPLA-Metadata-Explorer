@@ -21,12 +21,13 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                 default:
                     return "http://dp.la/search?q=";
             }
-        };
+        };var search = scope.search; console.log('s'+search);
 
-        scope.$watchGroup(['data', 'chart'], function(values) {
+        scope.$watchGroup(['data', 'chart', 'search'], function(values) {
             if(!values[0]) { return; }
             var data = values[0];
             var chart_type = values[1];
+            var search = values[2]; console.log(search)
 
             /**
              * Format data
@@ -87,7 +88,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
             /**
              * Clean up any extraneous svg elements on transition
              */
-            d3.selectAll(".graph").transition().remove();
+            d3.selectAll(".graph").remove();
             d3.selectAll("#attribution").remove();
 
             /**
@@ -370,7 +371,8 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
         scope: {
             'provider': '@',
             'data': '=',
-            'chart': '='
+            'chart': '=',
+            'search': '='
         },
         link: link
     }
