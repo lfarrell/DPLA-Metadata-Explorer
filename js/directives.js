@@ -27,7 +27,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
             if(!values[0]) { return; }
             var data = values[0];
             var chart_type = values[1];
-            var search = values[2]; console.log(search)
+            var search = values[2];
 
             /**
              * Format data
@@ -47,6 +47,11 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
             });
 
             keys = keys.sort();
+
+            /**
+             * Force it up
+             */
+            var force = d3.layout.force();
 
             /**
              * Add the legend
@@ -99,7 +104,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
              } else if(chart_type === 'cloud') {
                 textCloud();
              } else {
-                textCloud();
+                treeMap();
              }
 
             /**
@@ -125,8 +130,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                     )
                     .range([5, 30]);
 
-                var force = d3.layout.force()
-                    .nodes(data_nodes.nodes)
+                force.nodes(data_nodes.nodes)
                     .size([width, height + 175])
                     .charge(function(d) {
                         var charging = -scale(d.term.length) + scale(d.count) * 10;
@@ -137,7 +141,6 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                             return -8;
                         }
                         return -charging * 2;
-
                     })
                     .start();
 
@@ -175,7 +178,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                         tipService.tipHide(tip);
                     })
                     .on("click", function(d) {
-                        window.open(provider(scope.provider) + '"' + d.term + '"');
+                        window.open(provider(scope.provider) + '"' + search + '"' + '+' + d.term);
                     })
                     .call(drag);
 
@@ -195,6 +198,8 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
             }
 
             function treeMap() {
+                force = null;
+
                 var height = 900 - 180,
                     x = d3.scale.linear().range([0, width]),
                     y = d3.scale.linear().range([0, height]),
