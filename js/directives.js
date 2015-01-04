@@ -101,14 +101,12 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                 textCloud();
              }
 
-
-
             /**
              * Graph types
              */
             function textCloud() {
                 var height = document.body.clientHeight - 25,
-                    margin = { 'top':250, bottom: 25, left: 0, right: 25 };
+                    margin = { 'top': Math.round(data.length / 3.5), bottom: 25, left: 0, right: 25 };
 
                 var zoom = d3.behavior.zoom()
                     .scaleExtent([1, 10])
