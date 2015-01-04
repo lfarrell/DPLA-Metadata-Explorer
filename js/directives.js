@@ -198,7 +198,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
             }
 
             function treeMap() {
-                force = null;
+                force.stop();
 
                 var height = 900 - 180,
                     x = d3.scale.linear().range([0, width]),
@@ -237,8 +237,11 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                     .attr("transform", function (d) {
                         return "translate(" + d.x + "," + d.y + ")";
                     })
-                    .on("dblclick", function (d) {
+                    .on("click", function (d) {
                         return zoom(node == d.parent ? root : d.parent);
+                    })
+                    .on("dblclick", function (d) {
+                        window.open(provider(scope.provider) + '"' + search + '"' + '+' + d.term);
                     });
 
                 cell.append("rect")
