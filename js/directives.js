@@ -21,10 +21,11 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                 default:
                     return "http://dp.la/search?q=";
             }
-        };var search = scope.search; console.log('s'+search);
+        };
 
         scope.$watchGroup(['data', 'chart', 'search'], function(values) {
             if(!values[0]) { return; }
+
             var data = values[0];
             var chart_type = values[1];
             var search = values[2];
@@ -33,7 +34,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
              * Format data
              * @type {{name: string, children: Array}}
              */
-            var datas = {name: "root", "children": [] };
+            var datas = { name: "root", "children": [] };
             var keys = [];
 
             data.forEach(function(d) {
@@ -104,7 +105,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
              } else if(chart_type === 'cloud') {
                 textCloud();
              } else {
-                treeMap();
+                textCloud();
              }
 
             /**
@@ -134,6 +135,8 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                     .size([width, height + 175])
                     .charge(function(d) {
                         var charging = -scale(d.term.length) + scale(d.count) * 10;
+
+                        if(scope.provider === 'digitalnz') return -40; // Doesn't return many items, so this.
 
                         if(charging > -100)  {
                             return -25;
@@ -198,8 +201,6 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
             }
 
             function treeMap() {
-                force.stop();
-
                 var height = 900 - 180,
                     x = d3.scale.linear().range([0, width]),
                     y = d3.scale.linear().range([0, height]),
@@ -237,14 +238,15 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                     .attr("transform", function (d) {
                         return "translate(" + d.x + "," + d.y + ")";
                     })
-                    .on("click", function (d) {
+                    .on("dblclick", function (d) {
                         return zoom(node == d.parent ? root : d.parent);
                     })
-                    .on("dblclick", function (d) {
+                    .on("click", function (d) {
                         window.open(provider(scope.provider) + '"' + search + '"' + '+' + d.term);
                     });
 
                 cell.append("rect")
+                    .attr("class", "mapped")
                     .attr("width", function (d) {
                         var w = d.dx - 1;
                         if(w > 0) {

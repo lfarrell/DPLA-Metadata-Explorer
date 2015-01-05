@@ -14,15 +14,19 @@
     </div>
 </div>
 <div class="row" ng-show="loaded">
-    <a class="btn btn-info col-md-1 ng-isolate-scope" id="about-btn" pageslide="left" ps-custom-top="40" href="#about">About</a>
-    <div class="btn-group col-md-2">
-        <button class="btn btn-default" ng-click="graphType('tree')">Treemap</button>
-        <button class="btn btn-default" ng-click="graphType('cloud')">Text Cloud</button>
+    <div class="col-md-1">
+        <a class="btn btn-info  ng-isolate-scope" id="about-btn" pageslide="left" ps-custom-top="40" href="#about">About</a>
     </div>
-    <h3 class="col-md-9">Search: {{ search_term }}</h3>
+    <!-- <div class="btn-group col-md-2">
+         <button class="btn btn-default" ng-click="graphType('tree')">Treemap</button>
+         <button class="btn btn-default" ng-click="graphType('cloud')">Text Cloud</button>
+     </div> -->
+    <div class="col-md-11">
+        <h3>Search: {{ search_term }}</h3>
+    </div>
 </div>
 <div class="row" ng-show="loaded">
-    <div class="col-md-12 tree-map" data="data" provider="digitalnz"></div>
+    <div class="col-md-12 force-tree" search="search_term" chart="chart" data="data" provider="digitalnz"></div>
     <div class="col-md-12"><img src="imgs/digitalnz_logo_sm.jpg" alt="Digital New Zealand Logo"></div>
 </div>
 
