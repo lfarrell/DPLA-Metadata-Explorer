@@ -10,7 +10,7 @@ $data = json_decode($records, true);
 $values = array();
 
 $place_names = $data['search']['facets']['placename'];
-$creators = $data['search']['facets']['category'];
+$creators = $data['search']['facets']['creator'];
 $years = $data['search']['facets']['year'];
 $categories = $data['search']['facets']['category'];
 $languages = $data['search']['facets']['language'];
