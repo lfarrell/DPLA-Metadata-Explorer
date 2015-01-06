@@ -181,7 +181,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                         tipService.tipHide(tip);
                     })
                     .on("click", function(d) {
-                        window.open(provider(scope.provider) + '"' + search + '"' + '+' + d.term);
+                        window.open(provider(scope.provider) + search + ' ' + d.term);
                     })
                     .call(drag);
 
