@@ -3,7 +3,7 @@ include 'functions.php';
 include 'keys.php';
 
 $q = clean($_GET['q']);
-$path = "http://api.digitalnz.org/v3/records.json?api_key=$digital_nz_key&text=$q&facets=placename,creator,year,category,language,content_partner&facet_per_page=50&per_page=0";
+$path = "http://api.digitalnz.org/v3/records.json?api_key=$digital_nz_key&text=$q&facets=placename,creator,year,category,language,content_partner,rights&facet_per_page=50&per_page=0";
 $records = get_records($path);
 
 $data = json_decode($records, true);
@@ -14,7 +14,8 @@ $creators = $data['search']['facets']['creator'];
 $years = $data['search']['facets']['year'];
 $categories = $data['search']['facets']['category'];
 $languages = $data['search']['facets']['language'];
-$providers = $data['search']['facets']['content_provider'];
+$providers = $data['search']['facets']['content_partner'];
+$rights = $data['search']['facets']['rights'];
 
 $i = 0;
 foreach($place_names as $key => $place_name) {
@@ -56,6 +57,13 @@ foreach($providers as $key => $provider) {
     $values[$i]['term'] = $key;
     $values[$i]['count'] = $provider;
     $values[$i]['type'] = 'Provider';
+    $i++;
+}
+
+foreach($rights as $key => $right) {
+    $values[$i]['term'] = $key;
+    $values[$i]['count'] = $right;
+    $values[$i]['type'] = 'Rights';
     $i++;
 }
 

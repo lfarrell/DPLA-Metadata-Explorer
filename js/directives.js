@@ -136,7 +136,7 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                     .charge(function(d) {
                         var charging = -scale(d.term.length) + scale(d.count) * 10;
 
-                        if(scope.provider === 'digitalnz') return -40; // Doesn't return many items, so this.
+                        if(scope.provider === 'digitalnz') return -60; // Doesn't return many items, so this.
 
                         if(charging > -100)  {
                             return -25;
