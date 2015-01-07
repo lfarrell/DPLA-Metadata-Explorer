@@ -2,7 +2,7 @@
 include 'functions.php';
 include 'keys.php';
 
-$q = clean($_GET['q']);
+$q = format(clean($_GET['q']));
 $path = "http://api.digitalnz.org/v3/records.json?api_key=$digital_nz_key&text=$q&facets=placename,creator,year,category,language,subject,content_partner,rights&facet_per_page=50&per_page=0";
 $records = get_records($path);
 

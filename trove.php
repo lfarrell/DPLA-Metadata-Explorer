@@ -1,8 +1,8 @@
 <?php
 include 'functions.php';
 include 'keys.php';
-$_GET['q'] = 'Queensland';
-$q = clean($_GET['q']);
+
+$q = format(clean($_GET['q']));
 $path = "http://api.trove.nla.gov.au/result?key=$trove_key&zone=newspaper&q=$q&facet=format,year,decade,language,category";
 //echo $path; exit;
 $records = get_records($path);
