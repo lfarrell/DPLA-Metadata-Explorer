@@ -42,6 +42,7 @@ angular.module('metadataViewerApp').controller('digitalNzController', ['$scope',
     };
 }]);
 
+
 angular.module('metadataViewerApp').controller('europeanaController', ['$scope', 'LoadService', function($scope, LoadService) {
     $scope.header = 'Europeana';
     $scope.search = '';
@@ -51,5 +52,17 @@ angular.module('metadataViewerApp').controller('europeanaController', ['$scope',
 
         var val = LoadService.queryFormat($scope.search);
         LoadService.file_load("europeana.php?q=" + val, $scope);
+    };
+}]);
+
+angular.module('metadataViewerApp').controller('harvardController', ['$scope', 'LoadService', function($scope, LoadService) {
+    $scope.header = 'Harvard Libraries';
+    $scope.search = '';
+
+    $scope.apiSearch = function() {
+        LoadService.canvasFormat($scope);
+
+        var val = LoadService.queryFormat($scope.search);
+        LoadService.file_load("harvard.php?q=" + val, $scope);
     };
 }]);

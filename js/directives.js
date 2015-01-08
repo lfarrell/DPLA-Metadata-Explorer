@@ -18,6 +18,9 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                 case "trove":
                     return "http://trove.nla.gov.au/result?q=";
                     break;
+                case "harvard":
+                    return "http://stacklife.harvard.edu/search?search_type=keyword&q=";
+                    break;
                 default:
                     return "http://dp.la/search?q=";
             }
@@ -134,7 +137,15 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                 force.nodes(data_nodes.nodes)
                     .size([width, height + 175])
                     .charge(function(d) {
-                        var charging = -scale(d.term.length) + scale(d.count) * 10;
+                        var charging;
+
+                        if(scope.provider === 'harvard') {
+                            charging = -scale(d.count) * 10;
+                        } else if(scope.provider === 'digitalnz') {
+                            return -60
+                        } else {
+                           charging = -scale(d.term.length) + scale(d.count) * 10;
+                        }
 
                         if(scope.provider === 'digitalnz') return -60; // Doesn't return many items, so this.
 
