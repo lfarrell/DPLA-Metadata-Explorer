@@ -142,12 +142,12 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                         if(scope.provider === 'harvard') {
                             charging = -scale(d.count) * 10;
                         } else if(scope.provider === 'digitalnz') {
-                            return -60
+                            return -60 // Doesn't return many items, so this.
                         } else {
                            charging = -scale(d.term.length) + scale(d.count) * 10;
                         }
 
-                        if(scope.provider === 'digitalnz') return -60; // Doesn't return many items, so this.
+                   //     if(scope.provider === 'digitalnz') return -60; // Doesn't return many items, so this.
 
                         if(charging > -100)  {
                             return -25;
@@ -192,7 +192,25 @@ angular.module('metadataViewerApp').directive('forceTree', ['tipService', 'Stats
                         tipService.tipHide(tip);
                     })
                     .on("click", function(d) {
-                        window.open(provider(scope.provider) + search + ' ' + d.term);
+                        var facet, term;
+
+                        if(d.term === 'rights') {
+                            term = encodeURIComponent(d.term);
+                        } else {
+                            term = d.term;
+                        }
+
+                        if(scope.provider === 'euro') {
+                            if(d.term === 'provider') {
+                                term = '"' + d.term + '"';
+                            }
+
+                            facet = '&qf=' + d.type.toUpperCase() + '%3A' + term;
+                        } else {
+                            facet = ' ' + term;
+                        }
+
+                        window.open(provider(scope.provider) + search + facet);
                     })
                     .call(drag);
 
